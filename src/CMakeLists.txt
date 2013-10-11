@@ -1,6 +1,6 @@
 # configure cmake
 set (CMAKE_C_FLAGS "-u MAIN__ -std=gnu99 -Wfloat-equal -Wall -Wundef -Wno-strict-aliasing -Wno-unused-function")
-set (CMAKE_CXX_FLAGS "-u MAIN__ -Wall -Wundef -Wno-strict-aliasing")
+set (CMAKE_CXX_FLAGS "-u MAIN__ -Wall -Wundef -Wno-strict-aliasing --std=gnu++0x")
 
 if (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
   add_definitions (-D_LINUX -D_x64)
