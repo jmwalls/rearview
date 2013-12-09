@@ -39,3 +39,4 @@ endif ()
 
 # add subdirs
 add_subdirectory (capture)
+add_subdirectory (utils)
