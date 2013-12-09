@@ -8,7 +8,7 @@ while True:
     ret, im = cap.read ()
     cv2.imshow ('Snap image', im)
     key = cv2.waitKey (10)
-    if key == 27: 
+    if key == 27 or key == 1048603: 
         print 'goodbye'
         break
     elif key > 0:

@@ -6,7 +6,7 @@ from scipy.spatial.distance import cdist
 from cv2 import imwrite
 
 import matplotlib.pyplot as plt
-import pydot
+#import pydot
 
 import cPickle as pickle
 
