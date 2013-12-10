@@ -4,6 +4,7 @@
  */
 
 #include <iostream>
+#include <fstream>
 
 #include "rearview/utils/fixedradnn.h"
 
@@ -13,31 +14,38 @@ int main (int argc, char *argv[])
 {
     cout << "cell fixed radius nearest neighbor test" << endl;
 
-    double size[2] = {125.,125.};
-    Cell_nn<2,20> cell (size);
+    double size[2] = {225.,225.};
+    Cell_nn<2,3> cell (size);
 
     // first, we'll generate a bunch of points and add to the cellnn structure 
-    //cout << "adding points" << endl;
     std::list<double*> points;
     for (size_t i=0;i<10000;++i) {
-        double* x = new double ();
+        double* x = new double[2];
         x[0] = rand ()%1000 - 500; 
         x[1] = rand ()%1000 - 500;
         cell.add_point (x);
         points.push_back (x);
-        //cout << x[0] << "\t" << x[1] << endl;
     }
 
     // print out all points in each cell
-    //cout << "iding points" << endl;
+    ofstream fpts ("pts.txt");
     size_t id = 0;
     for (auto it=cell.cells_begin ();it!=cell.cells_end ();++it,++id) {
-        std::list<double*> pts = it->second;
+        std::list<const double*> pts = it->second;
         for (auto&p : pts)
-            cout << id << "\t" << p[0] << "\t" << p[1] << endl;
+            fpts << id << "\t" << p[0] << "\t" << p[1] << endl;
     }
 
-    for (auto& p : points) delete p;
+    // query point
+    double qpt[2] = {125.,-75.};
+    list<pair<double,const double*> > nn = cell.points_in_radius (qpt, 150);
+
+    ofstream fnn ("nn.txt");
+    for (auto& n : nn) {
+        fnn <<  n.second[0] << "\t" << n.second[1] << endl;
+    }
+
+    for (auto& p : points) delete[] p;
     return EXIT_SUCCESS;
 }
 
