@@ -31,16 +31,101 @@
  *
  */
 
+#include <algorithm>
+#include <list>
+
 #include "fixedradnn.h"
 
-template<size_t dim>
+/* DBSCAN clustering object
+ *
+ * Nd : dimension of space
+ * Nb : number of bits per dimension including sign bit (64bits maximum)
+ */
+template<size_t Nd, size_t Nb>
 class DBSCAN
 {
+    typedef const double* pt_t;
+    typedef std::list<pt_t> pts_t;
+
+    typedef std::pair<double,const double*> distpt_t;
+
+    typedef std::list<pts_t>::const_iterator cluster_iterator;
   public:
-    DBSCAN (double eps, size_t min_pts) {}
+    DBSCAN (double eps, size_t min_pts) 
+        : _eps (eps), _min_pts (min_pts), _nnbrs () {}
     ~DBSCAN () {}
 
+    void add_point (const double* p) 
+    {
+        _points.push_back (p);
+        _nnbrs.add_point (p);
+    }
+
+    /*
+     * batch clustering procedure
+     */
+    void cluster () 
+    {
+        _clusters.clear ();
+
+        pts_t unvisited = _points, clustered;
+        while (!unvisited.empty ()) {
+            pt_t p = unvisited.front ();
+            unvisited.pop_front ();
+
+            std::list<distpt_t> nbrs = _nnbrs.points_in_radius (p, _eps);
+            if (nbrs.size () < _min_pts) // p is noise
+                continue; 
+            else {                       // expand cluster
+                pts_t nbrpts;
+                for (auto& n : nbrs) nbrpts.push_back (n.second);
+                expand_cluster (p, nbrpts, unvisited, clustered);
+            }
+        }
+    }
+
+    /* 
+     * access clusters
+     */
+    cluster_iterator clusters_begin () {return _clusters.cbegin ();}
+    cluster_iterator clusters_end () {return _clusters.cend ();}
+
   private:
+    double _eps;
+    size_t _min_pts;
+
+    pts_t _points;
+    std::list<pts_t> _clusters;
+
+    Cell_nn<Nd,Nb> _nnbrs;
+
+    void expand_cluster (const pt_t& p, pts_t& nbrs, pts_t& unvisited, pts_t& clustered)
+    {
+        pts_t cluster;
+        cluster.push_back (p);
+        clustered.push_back (p);
+
+        while (!nbrs.empty ()) {
+            pt_t pp = nbrs.front ();
+            nbrs.pop_front ();
+
+            auto it = std::find (unvisited.begin (), unvisited.end (), pp);
+            if (it!=unvisited.end ()) { // pp is unvisited
+                unvisited.erase (it);
+                std::list<distpt_t> pnbrs = _nnbrs.points_in_radius (pp, _eps);
+                if (pnbrs.size () >= _min_pts) {
+                    for (auto& n : pnbrs) nbrs.push_back (n.second);
+                }
+            }
+            it = std::find (clustered.begin (), clustered.end (), pp);
+            if (it==clustered.end ()) { // pp not clustered already
+                clustered.push_back (pp);
+                cluster.push_back (pp);
+            }
+        }
+        _clusters.push_back (cluster);
+    }
+
     DBSCAN () {}
 };
 
