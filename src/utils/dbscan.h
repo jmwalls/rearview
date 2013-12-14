@@ -34,7 +34,7 @@
 #include <algorithm>
 #include <list>
 
-#include "fixedradnn.h"
+#include "cellnn.h"
 
 /* DBSCAN clustering object
  *

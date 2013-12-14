@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "rearview/utils/fixedradnn.h"
+#include "rearview/utils/cellnn.h"
 
 using namespace std;
 

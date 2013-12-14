@@ -1,5 +1,5 @@
-#ifndef __UTILS_FIXEDRADNN_H__
-#define __UTILS_FIXEDRADNN_H__
+#ifndef __UTILS_CELLNN_H__
+#define __UTILS_CELLNN_H__
 /*
  * Object for quickly computing fixed radius nearest neighbors with a
  * Euclidean distance metric using a cell-based implementation.  Each point is
@@ -155,4 +155,4 @@ class Cell_nn
     }
 };
 
-#endif // __UTILS_FIXEDRADNN_H__
+#endif // __UTILS_CELLNN_H__
