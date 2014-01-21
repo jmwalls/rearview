@@ -2,16 +2,16 @@
 --------
 
 Rearview mirror detects familiar faces walking into the camera field of
-vision.
+view.
 
 `utils` provides some interesting methods for playing around with clustering
 and nearest neighbors. Included for computing nearest neighbors (nearest or
 fixed-radius) are
 
-* cell decomposition : `Cell_nn`
+* linear : `Linear_nn`
+* cell : `Cell_nn`
 * kd-tree : `Kd_tree`
-
-FLANN would provide faster results, but this is just for giggles.
+* FLANN : wrapper around FLANN for approximate nearest neighbors.
 
 
 ###Build

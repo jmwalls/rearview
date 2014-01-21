@@ -23,6 +23,8 @@
 #include <string>
 #include <vector>
 
+namespace rearview {
+
 /* Bitset compare
  *
  * Nb : number of bits
@@ -76,53 +78,14 @@ class Cell_nn
     /*
      * add point p to appropriate cell
      */
-    void add_point (const double* p) 
-    {
-        _cells[hash (p)].push_back (p);
-    }
+    void add_point (const double* p) {_cells[hash (p)].push_back (p);}
 
     /*
      * compute fixed radius nearest neighbor search
      * idea is to perform a brute force search over all (adjacent) cells that
      * could potentially hold points within radius.
      */
-    std::list<distpt_t> points_in_radius (const double* p, double radius)
-    {
-        std::list<distpt_t> pts;
-
-        std::vector<int> to_check (Nd), delta (Nd);
-        for (size_t i=0;i<Nd;++i) {
-            to_check[i] = ceil (radius/_size[i]);
-            delta[i] = -to_check[i];
-        }
-
-        std::vector<double> nbr (Nd);
-        auto itd = delta.begin (), itc = to_check.begin ();
-        while (true) {
-            for (size_t i=0;i<Nd;++i) nbr[i] = p[i] + delta[i]*_size[i];
-            cell_t cnbr = _cells[hash (nbr.data ())];
-            for (auto& pnbr : cnbr) {
-                double d = 0;
-                for (size_t i=0;i<Nd;++i) d += pow (p[i] - pnbr[i],2);
-                if (d < radius*radius) pts.push_back (std::make_pair (sqrt (d), pnbr));
-            }
-            
-            if (++(*itd) > *itc) { // increment indicator iterators
-                *itd = -*itc;
-                while (true) {
-                    ++itd,++itc;
-                    if (itd==delta.end ()) break;
-                    if (++(*itd) > *itc) *itd = -*itc;
-                    else break;
-                }
-                if (itd==delta.end ()) break;
-                else itd = delta.begin (), itc = to_check.begin ();
-            }
-        }
-
-        pts.sort ();
-        return pts;
-    }
+    std::list<distpt_t> near (const double* p, double radius);
 
     /*
      * for debugging---access all cells in _cells
@@ -132,7 +95,7 @@ class Cell_nn
 
   private:
     std::map<std::bitset<Nd*Nb>, cell_t, Bitset_compare<Nd*Nb>> _cells;
-    double _size[Nd];
+    double _size[Nd];    // grid cell size
     int64_t _widthmask;
 
     std::bitset<Nd*Nb> hash (const double* p)
@@ -154,5 +117,47 @@ class Cell_nn
         for (size_t i=0;i<Nb-1;++i) _widthmask = (_widthmask << 1) | 1;
     }
 };
+
+template<size_t Nd, size_t Nb>
+std::list<std::pair<double,const double*> > 
+Cell_nn<Nd,Nb>::near (const double* p, double radius)
+{
+    std::list<distpt_t> pts;
+
+    std::vector<int> to_check (Nd), delta (Nd);
+    for (size_t i=0;i<Nd;++i) {
+        to_check[i] = ceil (radius/_size[i]);
+        delta[i] = -to_check[i];
+    }
+
+    std::vector<double> nbr (Nd);
+    auto itd = delta.begin (), itc = to_check.begin ();
+    while (true) {
+        for (size_t i=0;i<Nd;++i) nbr[i] = p[i] + delta[i]*_size[i];
+        cell_t cnbr = _cells[hash (nbr.data ())];
+        for (auto& pnbr : cnbr) {
+            double d = 0;
+            for (size_t i=0;i<Nd;++i) d += pow (p[i] - pnbr[i],2);
+            if (d < radius*radius) pts.push_back (std::make_pair (sqrt (d), pnbr));
+        }
+        
+        if (++(*itd) > *itc) { // increment indicator iterators
+            *itd = -*itc;
+            while (true) {
+                ++itd,++itc;
+                if (itd==delta.end ()) break;
+                if (++(*itd) > *itc) *itd = -*itc;
+                else break;
+            }
+            if (itd==delta.end ()) break;
+            else itd = delta.begin (), itc = to_check.begin ();
+        }
+    }
+
+    pts.sort ();
+    return pts;
+}
+
+} // rearview
 
 #endif // __UTILS_CELLNN_H__

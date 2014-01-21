@@ -34,7 +34,7 @@ int main (int argc, char *argv[])
 
     double eps = 5.;
     size_t minpts = 5;
-    DBSCAN<2,15> db (eps, minpts);
+    rearview::DBSCAN<2,15> db (eps, minpts);
 
     // add points
     list<double*> points;

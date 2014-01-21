@@ -6,17 +6,18 @@
 
 namespace rearview {
 
-//template<size_t Nd>
-class Hyperrect
-{
-    typedef const double* pt_t;
-  public:
-    Hyperrect () {}
-    ~Hyperrect () {}
-
-  private:
-    pt_t _min, _max;
-};
+//class Hyperrect
+//{
+//  public:
+//    Hyperrect (const double* min, const double* max) 
+//        : _min (min), _max (max) {}
+//    ~Hyperrect () {}
+//
+//  private:
+//    const double *_min, *_max;
+//
+//    Hyperrect () {}
+//};
 
 
 template<size_t Nd>
@@ -27,20 +28,27 @@ class Kdtree_node
     ~Kdtree_node () {}
 
   private:
-    //Hyperrect<Nd> _rect;
+    const double* _pos;
+    size_t _dir;
+
     Kdtree_node *_left, *_right;
 };
 
 
-template<size_t Nd>
+/*
+ * T : container type with iterators to loop over points
+ */
+template<class T, size_t Nd>
 class Kdtree
 {
   public:
-    Kdtree () {}
+    Kdtree (const T& points) {}
     ~Kdtree () {}
 
   private:
-    //Kdtree_node _root;
+    Kdtree_node<Nd>* _root;
+
+    Kdtree () {}
 };
 
 } // rearview

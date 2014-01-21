@@ -15,7 +15,7 @@ int main (int argc, char *argv[])
     cout << "cell fixed radius nearest neighbor test" << endl;
 
     double size[2] = {225.,225.};
-    Cell_nn<2,3> nnbrs (size);
+    rearview::Cell_nn<2,3> nnbrs (size);
 
     // first, we'll generate a bunch of points and add to the cellnn structure 
     list<double*> points;
@@ -38,7 +38,7 @@ int main (int argc, char *argv[])
 
     // query point
     double qpt[2] = {125.,-75.};
-    list<pair<double,const double*> > nn = nnbrs.points_in_radius (qpt, 150);
+    list<pair<double,const double*> > nn = nnbrs.near (qpt, 150);
 
     ofstream fnn ("nn.txt");
     for (auto& n : nn) {

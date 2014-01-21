@@ -36,6 +36,8 @@
 
 #include "cellnn.h"
 
+namespace rearview {
+
 /* DBSCAN clustering object
  *
  * Nd : dimension of space
@@ -73,7 +75,7 @@ class DBSCAN
             pt_t p = unvisited.front ();
             unvisited.pop_front ();
 
-            std::list<distpt_t> nbrs = _nnbrs.points_in_radius (p, _eps);
+            std::list<distpt_t> nbrs = _nnbrs.near (p, _eps);
             if (nbrs.size () < _min_pts) // p is noise
                 continue; 
             else {                       // expand cluster
@@ -112,7 +114,7 @@ class DBSCAN
             auto it = std::find (unvisited.begin (), unvisited.end (), pp);
             if (it!=unvisited.end ()) { // pp is unvisited
                 unvisited.erase (it);
-                std::list<distpt_t> pnbrs = _nnbrs.points_in_radius (pp, _eps);
+                std::list<distpt_t> pnbrs = _nnbrs.near (pp, _eps);
                 if (pnbrs.size () >= _min_pts) {
                     for (auto& n : pnbrs) nbrs.push_back (n.second);
                 }
@@ -128,5 +130,7 @@ class DBSCAN
 
     DBSCAN () {}
 };
+
+} // rearview
 
 #endif // __UTILS_DBSCAN_H__
