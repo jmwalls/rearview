@@ -9,7 +9,7 @@
  *
  * minpts: 
  * As a rule of thumb, a minimum minpts can be derived from the number of
- * dimensions D in the data set, as minpts≥D+1.  The low value of minpts=1
+ * dimensions D in the data set, as minpts>=D+1.  The low value of minpts=1
  * does not make sense, as then every point on its own will already be a
  * cluster. With minpts=2, the result will be the same as of hierarchical
  * clustering with the single link metric, with the dendrogram cut at height

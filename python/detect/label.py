@@ -30,7 +30,7 @@ def label_images (imgs):
     for im in imgs:
         fig = plt.figure ()
         ax = fig.add_subplot (111)
-        ax.imshow (im.reshape (24,24))
+        ax.imshow (im.reshape (24,24), cmap=plt.cm.gray)
         plt.show ()
         label = raw_input ('enter label: ')
         labels.append (label)
@@ -76,13 +76,13 @@ if __name__ == '__main__':
     ax1.imshow (dx,interpolation='nearest')
     fig1.tight_layout ()
 
-    fig2 = plt.figure (2)
-    rows,cols = np.ceil (n/10.), 10.
-    for ii,im in enumerate (imgs):
-        ax = fig2.add_subplot (rows,cols,ii)
-        ax.imshow (im.reshape (24,24), cmap=plt.cm.gray)
-        ax.axis ('off')
-    fig2.tight_layout ()
+    #fig2 = plt.figure (2)
+    #rows,cols = np.ceil (n/10.), 10.
+    #for ii,im in enumerate (imgs):
+    #    ax = fig2.add_subplot (rows,cols,ii)
+    #    ax.imshow (im.reshape (24,24), cmap=plt.cm.gray)
+    #    ax.axis ('off')
+    #fig2.tight_layout ()
 
     plt.show ()
     sys.exit (0)

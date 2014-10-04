@@ -2,7 +2,7 @@
 #define __UTILS_CELLNN_H__
 /*
  * Object for quickly computing fixed radius nearest neighbors with a
- * Euclidean distance metric using a cell-based implementation.  Each point is
+ * Euclidean distance metric using a cell-based implementation. Each point is
  * hashed into a hypercube. Point lookups just involve finding the cube (and
  * surrounding cubes) of the query point.
  *
