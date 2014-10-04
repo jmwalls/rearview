@@ -15,4 +15,3 @@ while True:
         print 'snapping image %d' % imcount
         cv2.imwrite ('test%03d.png'%imcount, im)
         imcount += 1
-

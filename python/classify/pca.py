@@ -1,9 +1,10 @@
-#!/usr/bin/env python
-"""
-plot training examples by their first two principle components
-"""
-import sys
+import numpy as np
 
-if __name__ == '__main__':
+class Pca (object):
+    """
+    find principle components of data
 
-    sys.exit (0)
+    find svd of X, sort by size of eigenvalues
+    use scipy.sparse.linalg.svds (can specify k for largest eigenvalues)
+    """
+    pass
